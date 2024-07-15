@@ -1,36 +1,24 @@
 <?php
 
+use App\Connection;
 use App\Helpers\Text;
 use App\Model\Post;
+use App\URL;
 
- $title = 'Mon blog';
-$pdo = new PDO('mysql:dbname=tutoblog;host=127.0.0.1', 'root', 'mathilde', [
-  PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
-$page = $_GET['page'] ?? 1;
-if (!filter_var($page, FILTER_VALIDATE_INT)) {
-  throw new Exception("Numéro de page invalide");
-}
+$title = 'Mon blog';
+$pdo = Connection::getPDO();
 
-if ($page === '1') {
-  header('Location: ' .$router->url('home'));
-  http_response_code(301);
-  exit();
-}
-
-$currentPage = (int)($page);
-if ($currentPage <=  0) {
-  throw new Exception("Numéro de page invalide");
-}
+// Pagination
+$currentPage = URL::getPositiveInt('page', 1);
 $count = (int)$pdo->query("SELECT COUNT(id) FROM post")->fetch(PDO::FETCH_NUM)[0];
-
 $perPage = 12;
 $pages = ceil($count / $perPage);
-
 if ($currentPage > $pages) {
   throw new Exception("Cette page n'existe pas");
 }
 $offset = $perPage * ($currentPage - 1);
+
+// Get posts
 $query = $pdo->query("SELECT * FROM post ORDER BY created_at DESC LIMIT $perPage OFFSET $offset");
 $posts = $query->fetchAll(PDO::FETCH_CLASS, Post::class);
 ?>
