@@ -3,7 +3,6 @@
 use App\Connection;
 use App\Model\Category;
 use App\Model\Post;
-
 $id = (int)$params['id'];
 $slug = $params['slug'];
 
