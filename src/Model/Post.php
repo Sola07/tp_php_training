@@ -50,4 +50,17 @@ class Post {
       return $this->id;
     }
 
+    /**
+     * @return Category[]
+     */
+    public function getCategories(): array
+    {
+      return $this->categories;
+    }
+
+    public function addCategorie(Category $categorie): void {
+      $this->categories[] = $categorie;
+      $categorie->setPost($this);
+    }
+
 }

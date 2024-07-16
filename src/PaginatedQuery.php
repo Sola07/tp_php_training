@@ -52,7 +52,7 @@ class PaginatedQuery {
       if ($currentPage <= 1) return null;
       if ($currentPage > 2) $link .= '?page=' . ($currentPage - 1) ;
       return <<<HTML
-         <a href="{$link}" class="btn btn-primary">&laquo; Page précédente</a>
+         <a href="{$link}" class="btn btn-secondary">&laquo; Page précédente</a>
 HTML;
 
     }
@@ -64,7 +64,7 @@ HTML;
       if ($currentPage >= $pages) return null;
       $link .= "?page=" . ($currentPage + 1);
       return <<<HTML
-         <a href="{$link}" class="btn btn-primary ml-auto">Page suivante &raquo;</a>
+         <a href="{$link}" class="btn btn-secondary ml-auto">Page suivante &raquo;</a>
 HTML;
 
     }
