@@ -1,6 +1,7 @@
 <?php
 
 use App\Connection;
+use App\HTML\Form;
 use App\Table\PostTable;
 use App\Validator;
 
@@ -18,20 +19,23 @@ if (!empty($_POST)) {
     'name' => 'Titre',
     'content' => 'Contenu'
   ));
-  $v->rule('required', 'name');
-  $v->rule('lengthBetween', 'name', 3, 200);
+  $v->rule('required', ['name', 'slug']);
+  $v->rule('lengthBetween', ['name', 'slug'], 3, 200);
 
   if ($v->validate()) {
     $post
-      ->setName($_POST['name']);
+      ->setName($_POST['name'])
+      ->setContent($_POST['content'])
+      ->setSlug($_POST['slug'])
+      ->setCreatedAt($_POST['created_at']);
+
     $postTable->update($post);
     $success = true;
   } else {
     $errors = $v->errors();
   }
-
 }
-
+$form = new Form($post, $errors);
 ?>
 
 <?php if ($success): ?>
@@ -49,16 +53,9 @@ if (!empty($_POST)) {
 
 <h1 class="text-center mb-4 text-secondary">Editer l'article #<?= e($post->getName()) ?></h1>
 <form action="" method="POST">
-  <div class="form-group">
-    <label for="name" class ="text-secondary">Titre</label>
-    <input type="text" class="form-control my-3 <?= isset($errors['name']) ? 'is-invalid' : '' ?>" name="name" value="<?= e($post->getName()) ?>">
-    <?php if (isset($errors['name'])): ?>
-      <div class="invalid-feedback">
-        <?php foreach ($errors['name'] as $error): ?>
-          <p class="mb-1 mt-1"><?= $error ?></p>
-        <?php endforeach ?>
-      </div>
-    <?php endif ?>
-  </div>
-  <button class="btn btn-primary">Modifier</button>
+  <?= $form->input('name', 'Titre') ?>
+  <?= $form->input('slug', 'URL') ?>
+  <?= $form->textarea('content', 'Contenu') ?>
+  <?= $form->textarea('created_at', 'Date de publication') ?>
+  <button class="btn btn-primary mt-4">Modifier</button>
 </form>
