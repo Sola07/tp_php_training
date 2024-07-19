@@ -77,6 +77,12 @@ class Post {
       return nl2br(e(Text::excerpt ($this->content, 60)));
     }
 
+    public function setID (int $id): self
+    {
+      $this->id = $id;
+      return $this;
+    }
+
     public function getID(): ?int {
       return $this->id;
     }

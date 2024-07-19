@@ -36,6 +36,22 @@ final class PostTable extends Table {
       }
     }
 
+    public function create (Post $post):void
+    {
+      $query = $this->pdo->prepare("INSERT INTO {$this->table} SET name = :name, slug = :slug, created_at = :created_at, content = :content");
+      $ok = $query->execute([
+        'name' => $post->getName(),
+        'slug' => $post->getSlug(),
+        'created_at' => $post->getCreatedAt()->format('Y-m-d H:i:s'),
+        'content' => $post->getContent()
+      ]);
+      if ($ok === false) {
+        throw new Exception("Impossible de créer l'enregistrement dans la table {$this->table}");
+      }
+      $post->setID($this->pdo->lastInsertId());
+
+    }
+
     public function findPaginated (): array
     {
       $paginatedQuery = new PaginatedQuery(

@@ -4,19 +4,19 @@ namespace App;
 
 class HelpObject {
 
-  public static function hydrate ($data, array $postURL, array $values)
+  public static function hydrate ($object, array $data, array $fields): void
   {
-    foreach ($values as $value)
+    foreach ($fields as $field)
     {
-      $method = self::getMethod($value);
-      $data->$method($postURL[$value]);
+      $method = self::getMethod($field);
+      $object->$method($data[$field]);
     }
 
   }
 
-  private static function getMethod (string $value): string
+  private static function getMethod (string $field): string
   {
-    return 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $value)));
+    return 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $field)));
 
     }
  }

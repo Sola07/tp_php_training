@@ -23,6 +23,8 @@ $link = $router->url('admin_posts');
 
 <table class="table">
   <thead>
+  <a href="<?= $router->url('admin_post_new') ?>" class="btn btn-primary">New article</a>
+
     <tr>
       <th scope="col">Id</th>
       <th scope="col">Article</th>
