@@ -1,6 +1,7 @@
 <?php
 
 use App\Connection;
+use App\HelpObject;
 use App\HTML\Form;
 use App\Table\PostTable;
 use App\Validator;
@@ -18,11 +19,13 @@ if (!empty($_POST)) {
   $v = new PostValidator($_POST, $postTable, $post->getID());
 
   if ($v->validate()) {
-    $post
-      ->setName($_POST['name'])
-      ->setContent($_POST['content'])
-      ->setSlug($_POST['slug'])
-      ->setCreatedAt($_POST['created_at']);
+
+    HelpObject::hydrate($post, $_POST, ['name', 'content', 'slug', 'created_at']);
+    // $post
+    //   ->setName($_POST['name'])
+    //   ->setContent($_POST['content'])
+    //   ->setSlug($_POST['slug'])
+    //   ->setCreatedAt($_POST['created_at']);
 
     $postTable->update($post);
     $success = true;
