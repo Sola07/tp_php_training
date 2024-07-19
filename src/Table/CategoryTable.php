@@ -3,13 +3,16 @@
 namespace App\Table;
 
 use App\Model\Category;
+use App\PaginatedQuery;
 use App\Table\Exception\NotFoundException;
+use Exception;
 use PDO;
 
 final class CategoryTable extends Table {
 
   protected $table = 'category';
   protected $class = Category::class;
+
 
   public function find(int $id) : ?Category
   {
@@ -44,4 +47,19 @@ final class CategoryTable extends Table {
         $postsByID[$categorie->getPostID()]->addCategorie($categorie);
       }
   }
+
+  public function findPaginated (): array
+  {
+    $paginatedQuery = new PaginatedQuery(
+      "SELECT *
+        FROM category
+        ORDER BY id DESC",
+      "SELECT COUNT(id) FROM {$this->table}",
+      $this->pdo
+      );
+    $categories = $paginatedQuery->getItems(Category::class);
+    return [$categories, $paginatedQuery];
+  }
+
+
 }

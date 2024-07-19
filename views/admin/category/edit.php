@@ -4,32 +4,35 @@ use App\Auth;
 use App\Connection;
 use App\HelpObject;
 use App\HTML\Form;
-use App\Table\PostTable;
-use App\Validators\PostValidator;
+use App\Table\CategoryTable;
+use App\Validators\CategoryValidator;
 
 Auth::check();
 
-
 $id = $params['id'];
 $pdo = Connection::getPDO();
-$postTable = new PostTable($pdo);
-$post = $postTable->find($id);
+$categoryTable = new CategoryTable($pdo);
+$item= $categoryTable->find($id);
 $success = false;
-
 $errors = [];
+$fields = ['name', 'slug'];
+
 if (!empty($_POST)) {
-  $v = new PostValidator($_POST, $postTable, $post->getID());
+  $v = new CategoryValidator($_POST, $categoryTable, $item->getID());
   if ($v->validate()) {
 
-    HelpObject::hydrate($post, $_POST, ['name', 'content', 'slug', 'created_at']);
+    HelpObject::hydrate($item, $_POST, $fields);
 
-    $postTable->updatePost($post);
+    $categoryTable->update([
+      'name' => $item->getName(),
+      'slug' => $item->getSlug()
+    ], $item->getID());
     $success = true;
   } else {
     $errors = $v->errors();
   }
 }
-$form = new Form($post, $errors);
+$form = new Form($item, $errors);
 ?>
 
 <?php if ($success): ?>
@@ -46,10 +49,10 @@ $form = new Form($post, $errors);
 
 <?php if (!empty($errors)): ?>
   <div class="alert alert-danger">
-    L'article n'a pas pu être modifié. Veuillez corriger vos erreurs.
+    La catégorie n'a pas pu être modifiée. Veuillez corriger vos erreurs.
   </div>
 <?php endif ?>
 
 
-<h1 class="text-center mb-4 text-secondary">Editer l'article #<?= e($post->getName()) ?></h1>
+<h1 class="text-center mb-4 text-secondary">Editer la catégorie #<?= e($item->getName()) ?></h1>
 <?php require('_form.php') ?>

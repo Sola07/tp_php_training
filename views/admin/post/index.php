@@ -5,7 +5,6 @@ use App\Connection;
 use App\Table\PostTable;
 
 Auth::check();
-
 $title = 'Administration';
 $pdo = Connection::getPDO();
 
@@ -18,12 +17,11 @@ $link = $router->url('admin_posts');
   </div>
 <?php endif ?>
 
-
+<a href="<?= $router->url('admin_post_new') ?>" class="btn btn-primary">Nouvel article</a>
 
 
 <table class="table">
   <thead>
-  <a href="<?= $router->url('admin_post_new') ?>" class="btn btn-primary">New article</a>
 
     <tr>
       <th scope="col">Id</th>
