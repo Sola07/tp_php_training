@@ -94,4 +94,8 @@ abstract class Table {
       }
   }
 
+  public function  queryAndFetchAll(string $sql): array {
+    return $this->pdo->query($sql, PDO::FETCH_CLASS, $this->class)->fetchAll();
+  }
+
 }

@@ -9,7 +9,7 @@ $title = 'Administration';
 $pdo = Connection::getPDO();
 
 $link = $router->url('admin_posts');
-[$posts, $pagination] = (new PostTable($pdo))->findPaginated();
+[$items, $pagination] = (new PostTable($pdo))->findPaginated();
 ?>
 <?php if (isset($_GET['delete'])):  ?>
   <div class="alert alert-success">
@@ -31,14 +31,14 @@ $link = $router->url('admin_posts');
     </tr>
   </thead>
   <tbody>
-    <?php foreach ($posts as $post): ?>
+    <?php foreach ($items as $item): ?>
     <tr>
-      <th scope="row"><?= $post->getId()?></th>
-      <td><a href="<?= $router->url ('admin_post', ['id' => $post->getID()]) ?>" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"><?= e($post->getName())?></a></td>
+      <th scope="row"><?= $item->getId()?></th>
+      <td><a href="<?= $router->url ('admin_post', ['id' => $item->getID()]) ?>" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"><?= e($item->getName())?></a></td>
       <td></td>
       <td class="d-flex justify-content-end" style="gap: 10px;">
-        <a href="<?= $router->url ('admin_post', ['id' => $post->getID()]) ?>" class="btn btn-outline-success">Modifier</a>
-        <form action="<?= $router->url ('admin_post_delete', ['id' => $post->getID()]) ?>" method="POST" onsubmit="return confirm('Voulez-vous vraiment effectuer cette action?')">
+        <a href="<?= $router->url ('admin_post', ['id' => $item->getID()]) ?>" class="btn btn-outline-success">Modifier</a>
+        <form action="<?= $router->url ('admin_post_delete', ['id' => $item->getID()]) ?>" method="POST" onsubmit="return confirm('Voulez-vous vraiment effectuer cette action?')">
           <button class="btn btn-outline-danger l-3">Supprimer</button>
         </form>
       </td>
